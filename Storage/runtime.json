@@ -341,5 +341,9 @@
     "2020-09-12 22:29:04.936133": "FPS: 121.74219071467004",
     "images22:29:04.9361": "['alice', 'beck', 'image', 'lmao', 'vagania']",
     "2020-09-12 23:10:43.040759": "FPS: 164.97317020327452",
-    "images23:10:43.0407": "['alice', 'beck', 'image', 'lmao', 'vagania']"
+    "images23:10:43.0407": "['alice', 'beck', 'image', 'lmao', 'vagania']",
+    "2020-09-13 00:43:52.401940": "FPS: 147.99894929240975",
+    "images00:43:52.4019": "['alice', 'beck', 'image', 'lmao', 'vagania', 'yes']",
+    "2020-09-13 00:45:18.972874": "FPS: 120.57719109786221",
+    "images00:45:18.9728": "['alice', 'beck', 'image', 'lmao', 'vagania', 'yes', 'beck', 'image', 'lmao', 'vagania', 'yes', 'yes']"
 }

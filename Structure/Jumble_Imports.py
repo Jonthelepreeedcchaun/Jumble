@@ -230,5 +230,7 @@ class UI_obj(images_obj):
         malleable_text(screen, i.x_pos[image.title], i.y_pos[image.title] + 12, image, ['title', 'x_pos', 'y_pos'])
 
         if mouse.t3:
+            for this in images.attr_list:
+                delattr(images, this)
             os.rename('UserImages/' + image.title + image.fileend, 'UserImages/' + 'yes' + image.fileend); images.retrieve()
             #exec('images.' + image.title + '.append({"title": "yes"})')
