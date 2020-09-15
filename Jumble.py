@@ -31,23 +31,23 @@ while running:
     if not mouse.m2: mouse.t2_v = 0
     pg.mouse.set_visible(mouse.mouse_visible)
     for this in tkey.keyname:
-        exec('tkey.' + this + '= 0')
+        tkey.append({this: 0})
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = 0
         if event.type == pg.KEYDOWN:
             for this in key.keylist:
-                if this == event.key: exec('tkey.' + key.keyname[key.keylist.index(this)] + '= 1'); exec('key.' + key.keyname[key.keylist.index(this)] + '= 1'); exec('nkey.' + key.keyname[key.keylist.index(this)] + '= 0')
+                if this == event.key: tkey.append({key.keyname[key.keylist.index(this)]: 1}); key.append({key.keyname[key.keylist.index(this)]: 1}); nkey.append({key.keyname[key.keylist.index(this)]: 0})
         if event.type == pg.KEYUP:
             for this in key.keylist:
-                if this == event.key: exec('key.' + key.keyname[key.keylist.index(this)] + '= 0'); exec('nkey.' + key.keyname[key.keylist.index(this)] + '= 1')
+                if this == event.key: key.append({key.keyname[key.keylist.index(this)]: 0}); nkey.append({key.keyname[key.keylist.index(this)]: 0})
         if event.type == pg.VIDEORESIZE:
             if not data.screenlist[1] == pg.FULLSCREEN: screen = pg.display.set_mode((event.w, event.h), pg.RESIZABLE)
     if tkey.F11:
         if data.screenlist[1] == pg.FULLSCREEN: data.screenlist = [(900, 600), pg.RESIZABLE]
         elif data.screenlist[1] == pg.RESIZABLE: data.screenlist = [(1920, 1080), pg.FULLSCREEN]
 
-    images.generate(screen, mouse, UI)
+    images.generate(screen, mouse, UI, tkey)
 
     pg.time.wait(1); pg.display.flip(); screen.fill((data.Bg[0], data.Bg[1], data.Bg[2])); data.frames += 1
 data.append({'elapsed_time': time.time() - data.start_time}); jsondata.update('runtime', {str(datetime.datetime.now()): 'FPS: ' + str(data.frames/data.elapsed_time), 'images' + str(datetime.datetime.now())[11:24]: str(images.attr_list)})
