@@ -47,9 +47,11 @@ while running:
         if data.screenlist[1] == pg.FULLSCREEN: data.screenlist = [(900, 600), pg.RESIZABLE]
         elif data.screenlist[1] == pg.RESIZABLE: data.screenlist = [(1920, 1080), pg.FULLSCREEN]
 
-    images.generate(screen, mouse, UI, tkey)
+    images.generate(screen, jsondata, mouse, UI, tkey, key)
 
     pg.time.wait(1); pg.display.flip(); screen.fill((data.Bg[0], data.Bg[1], data.Bg[2])); data.frames += 1
-data.append({'elapsed_time': time.time() - data.start_time}); jsondata.update('runtime', {str(datetime.datetime.now()): 'FPS: ' + str(data.frames/data.elapsed_time), 'images' + str(datetime.datetime.now())[11:24]: str(images.attr_list)})
-jsondata.save('runtime')
+data.append({'elapsed_time': time.time() - data.start_time}); jsondata.update('runtime', {str(datetime.datetime.now()): 'FPS: ' + str(data.frames/data.elapsed_time), 'images' + str(datetime.datetime.now())[11:24]: str(images.attr_list)}); m()
+jsondata.savelist.append('runtime')
+for this in jsondata.savelist:
+    jsondata.save(this)
 sys.exit()

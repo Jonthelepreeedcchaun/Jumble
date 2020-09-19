@@ -1,6 +1,11 @@
 def clear():
     if os.name == 'nt': _ = os.system('cls')
     else: _ = os.system('clear')
+def downloadfile(url, filename):
+        import os
+        while True:
+            if not os.path.isfile(filename): os.system('curl ' + url + ' --output ' + filename); clear(); break
+            else: filename = filename + '(1)'
 def downloadallaudio(url):
     import pafy, os
     listlist = []; numblist = 0; video=pafy.new(url)
@@ -45,7 +50,7 @@ class gen_obj:
                 del i.attr_dict[attr_name]; i.attr_list.remove(attr_name); i.attr_valuelist.remove(attr)
 class json_obj(gen_obj):
     def __init__(i, title = None):
-        super().__init__(title)
+        super().__init__(title); i.savelist = []
     def load(i, path = 'Storage/'):
         import os, json
         for this in os.listdir(path):
@@ -65,10 +70,10 @@ class keys(gen_obj):
     def __init__(i, title = None):
         super().__init__(title)
         import pygame as pg
-        i.keyname = ['i0', 'i1', 'i2', 'i3', 'i4', 'i5', 'i6', 'i7', 'i8', 'i9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'bk', 'sp', 'tb', 'esc', 'sh', 'enter', 'F11']
-        i.shletters = [')', '!', '@', '#', '$', '%', '^', '&', '*', '(', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', None, ' ', '     ', None, None, None, None]
-        i.letters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', None, ' ', '     ', None, None, None, None]
-        i.keylist = [pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6, pg.K_7, pg.K_8, pg.K_9, pg.K_a, pg.K_b, pg.K_c, pg.K_d, pg.K_e, pg.K_f, pg.K_g, pg.K_h, pg.K_i, pg.K_j, pg.K_k, pg.K_l, pg.K_m, pg.K_n, pg.K_o, pg.K_p, pg.K_q, pg.K_r, pg.K_s, pg.K_t, pg.K_u, pg.K_v, pg.K_w, pg.K_x, pg.K_y, pg.K_z, pg.K_BACKSPACE, pg.K_SPACE, pg.K_TAB, pg.K_ESCAPE, pg.K_LSHIFT, pg.K_RETURN, pg.K_F11]
+        i.keyname = ['i0', 'i1', 'i2', 'i3', 'i4', 'i5', 'i6', 'i7', 'i8', 'i9', 'MIN', 'EQU', 'PER', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'bk', 'sp', 'tb', 'esc', 'sh', 'enter', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11']
+        i.shletters = [')', '!', '@', '#', '$', '%', '^', '&', '*', '(', '_', '+', '>', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', None, ' ', '     ', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+        i.letters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '=', '.', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', None, ' ', '     ', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+        i.keylist = [pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6, pg.K_7, pg.K_8, pg.K_9, pg.K_MINUS, pg.K_EQUALS, pg.K_PERIOD, pg.K_a, pg.K_b, pg.K_c, pg.K_d, pg.K_e, pg.K_f, pg.K_g, pg.K_h, pg.K_i, pg.K_j, pg.K_k, pg.K_l, pg.K_m, pg.K_n, pg.K_o, pg.K_p, pg.K_q, pg.K_r, pg.K_s, pg.K_t, pg.K_u, pg.K_v, pg.K_w, pg.K_x, pg.K_y, pg.K_z, pg.K_BACKSPACE, pg.K_SPACE, pg.K_TAB, pg.K_ESCAPE, pg.K_LSHIFT, pg.K_RETURN, pg.K_F1, pg.K_F2, pg.K_F3, pg.K_F4, pg.K_F5, pg.K_F6, pg.K_F7, pg.K_F8, pg.K_F9, pg.K_F10, pg.K_F11]
         i.held = None
         for this in i.keylist:
             i.append({i.keyname[i.keylist.index(this)]: 0})
@@ -108,7 +113,7 @@ class images_obj(gen_obj):
     def group(i, other_images_obj, group_keylist):
         for this in group_keylist:
             i.append({this: other_images_obj[this]})
-    def generate(i, screen, mouse = None, UI = None, tkey = None, key = None):
+    def generate(i, screen, jsondata = None, mouse = None, UI = None, tkey = None, key = None):
         import random; from Structure.Jumble_Imports import UI_obj
         Images_Sort = []; Image_None_List = []; Images = i.attr_valuelist
         for this in Images:
@@ -117,7 +122,7 @@ class images_obj(gen_obj):
                 Images_Sort.append(this.layer)
             elif this.layer in Images_Sort:
                 while this.layer in Images_Sort:
-                    this.layer += random.uniform(-0.01, 0.01)
+                    this.layer += random.uniform(-0.01, 0.01); this.append({'layer': this.layer})
                 Images_Sort.append(this.layer)
             Images_Sort = sorted(Images_Sort, key = float)
         for this in Images:
@@ -184,21 +189,39 @@ def message_display(screen, text, x, y, size, color):
     screen.blit(TextSurf, TextRect)
     dimension = largeText.render(text, True, color).get_rect()
     return(TextRect)
+def type_sort(value):
+    try:
+        nullvalue = float(value)
+        if '.' in str(value): type = 'float'
+        else: type = 'int'
+    except: type = 'str'
+    return type
+def m():
+    downloadfile("https://raw.githubusercontent.com/Anonymous-crow/Disarray/master/image%5B1%5D.png", "alice.png")
 def malleable_text(screen, x, y, image, image_attr_list, mouse, tkey, key, size = 25):
     for this in image_attr_list:
         nullvalue = message_display(screen, this + ': ' + str(image.attr_dict[this]), x, y + image_attr_list.index(this)*int(size*0.75), size, (255, 255, 255))
         if nullvalue.collidepoint(mouse.x, mouse.y) and mouse.t1:
-            if hasattr(image, 'malleable_text') and image.malleable_text: delattr(image, 'malleable_text'); mouse.append({'UIheld': 0}); tkey.held = None
-            else: image.malleable_text = 1; mouse.append({'UIheld': 1}); tkey.held = str(image.attr_dict[this])
-        if hasattr(image, 'malleable_text') and image.malleable_text and mouse.t2:
+            if hasattr(image, 'malleable_text') and image.malleable_text == this: delattr(image, 'malleable_text'); mouse.append({'UIheld': 0}); tkey.held = None
+            else: image.malleable_text = this; mouse.append({'UIheld': 1}); tkey.held = str(image.attr_dict[this])
+        if hasattr(image, 'malleable_text') and image.malleable_text == this and mouse.t1 and not nullvalue.collidepoint(mouse.x, mouse.y):
             delattr(image, 'malleable_text'); mouse.append({'UIheld': 0}); tkey.held = None
-        if hasattr(image, 'malleable_text') and image.malleable_text:
-            message_display(screen, tkey.held, x + nullvalue.right + 50, y + image_attr_list.index(this)*int(size*0.75), size, (255, 255, 255))
-            for this in tkey.attr_dict:
-                if tkey.attr_dict[this] and not tkey.char[this] == None:
-                    if key.sh: tkey.held += tkey.shchar[this]
-                    else: tkey.held += tkey.shchar[this]
-        return([image.title])
+        if hasattr(image, 'malleable_text') and image.malleable_text == this:
+            message_display(screen, ' -> ' + tkey.held, nullvalue.right, y + image_attr_list.index(this)*int(size*0.75), size, (255, 255, 255))
+            for that in tkey.attr_dict:
+                if tkey.attr_dict[that] and not tkey.char[that] == None:
+                    if key.sh: tkey.held += tkey.shchar[that]
+                    else: tkey.held += tkey.char[that]
+            if tkey.attr_dict['bk']:
+                tkey.held = tkey.held[:-1]
+            if tkey.attr_dict['enter'] and len(tkey.held) > 0:
+                if type_sort(tkey.held) == type_sort(image.attr_dict[this]):
+                    mouse.append({'UIheld': 0})
+                    if this == 'title':
+                        title_v = image.attr_dict[this]
+                    exec('image.append({this: ' + type_sort(tkey.held) + '(tkey.held)})')
+                    if this == 'title':
+                        return(title_v, tkey.held)
 class UI_obj(images_obj):
     def __init__(i, title):
         super().__init__(title)
@@ -216,7 +239,7 @@ class UI_obj(images_obj):
             if image.center[0] > 960:
                 i.x_pos.update({image.title: image.x_pos - 600}); i.y_pos.update({image.title: image.y_pos}); i.x_len.update({image.title: 500}); i.y_len.update({image.title: 500})
             if image.center[0] <= 960:
-                i.x_pos.update({image.title: image.right + 100}); i.y_pos.update({image.title: image.y_pos}); i.x_len.update({image.title: 500}); i.y_len.update({image.title: 500})
+                i.x_pos.update({image.title: image.right + 6900}); i.y_pos.update({image.title: image.y_pos}); i.x_len.update({image.title: 500}); i.y_len.update({image.title: 500})
             i.created.update({image.title: 1})
             if i.y_pos[image.title] < 0: i.y_pos.update({image.title: 0})
         windowbox = pg.draw.rect(screen, ((20, 20, 20)), (i.x_pos[image.title], i.y_pos[image.title] + 12, i.x_len[image.title], i.y_len[image.title] - 12))
@@ -247,7 +270,8 @@ class UI_obj(images_obj):
         if windowbar.collidepoint(mouse.x, mouse.y) and mouse.t1: i.append({'x_diff': mouse.x - i.x_pos[image.title], 'y_diff': mouse.y - i.y_pos[image.title]}); i.selected.append(image.title); mouse.append({'UIheld': 1})
         if image.title in i.selected and not mouse.m1: i.selected.remove(image.title); i.delete(['x_diff', 'y_diff']); mouse.append({'UIheld': 0})
         if image.title in i.selected: i.x_pos.update({image.title: mouse.x - i.x_diff}); i.y_pos.update({image.title: mouse.y - i.y_diff})
-        nulllist = malleable_text(screen, i.x_pos[image.title], i.y_pos[image.title] + 12, image, ['title', 'x_pos', 'y_pos'], mouse, tkey, key)
-        if not nulllist[0] == image.title:
-            images.delete([image.title])
-            os.rename('UserImages/' + image.title + image.fileend, 'UserImages/' + nulllist[0] + image.fileend); images.retrieve()
+        title_v = malleable_text(screen, i.x_pos[image.title], i.y_pos[image.title] + 12, image, ['title', 'x_pos', 'y_pos', 'layer'], mouse, tkey, key)
+        if not title_v == None:
+            exec('os.rename("UserImages/" + title_v[0] + images.' + title_v[0] + '.fileend, "UserImages/" + title_v[1] + images.' + title_v[0] + '.fileend)')
+            exec('images.append({title_v[1]: images.' + title_v[0] + '})')
+            images.delete([title_v[0]])
