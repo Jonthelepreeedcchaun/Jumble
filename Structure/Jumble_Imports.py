@@ -1,39 +1,3 @@
-def clear():
-    if os.name == 'nt': _ = os.system('cls')
-    else: _ = os.system('clear')
-def downloadfile(url, filename):
-        import os
-        while True:
-            if not os.path.isfile(filename): os.system('curl ' + url + ' --output ' + filename); clear(); break
-            else: filename = filename + '(1)'
-def downloadallaudio(url):
-    import pafy, os
-    listlist = []; numblist = 0; video=pafy.new(url)
-    for i in listlist:
-        video.audiostreams[i].download()
-    os.open(video.title + ".m4a", os.O_RDONLY)
-def download_video(url = 'https://www.youtube.com/watch?v=iuF6CpML3IQ'):
-    import pafy, os
-    pafy.new(url).getbest(preftype ="mp4").download()
-def downloadmp3(url = 'https://www.youtube.com/watch?v=dpAvnPI04-s'):
-    import os, youtube_dl, pafy; from playsound import playsound
-    if not os.path.isfile('ffmpeg.exe'):
-        os.system('curl https://crow.epicgamer.org/assets/ffmpeg.exe --output ffmpeg.exe')
-        clear()
-    video=pafy.new(url); ash=url.split('=')[1]
-    if not os.path.isfile(video.title + "-" + ash + ".mp3"):
-        ydl_opts = {
-            'format': 'bestaudio/best',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            }],
-        }
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([url])
-        clear()
-    playsound(video.title + "-" + ash + ".mp3")
 class gen_obj:
     def __init__(i, title = None):
         i.title = title; i.attr_dict = {}; i.attr_list = []; i.attr_valuelist = []
@@ -98,18 +62,26 @@ class image(gen_obj):
 class images_obj(gen_obj):
     def __init__(i, title):
         super().__init__(title)
-        i.selected = []; i.UImouse_over = []; i.UI_dict = {}; i.yanderesimlist = []
+        i.selected = []; i.UImouse_over = []; i.UI_dict = {}
     def retrieve(i, path = None):
         from Structure.Jumble_Imports import image; import os
         for this in os.listdir(path):
+            this_str = this
             if path == None: path = ''
-            if this[-4:] == ".jpg" or this[-4:] == ".png":
-                os.rename(path + this, 'UserImages/' + this)
+            if this_str[-4:] == ".jpg" or this_str[-4:] == ".png":
+                os.rename(path + this_str, 'UserImages/' + this_str)
             if path == '': path = None
         for this in os.listdir('UserImages/'):
-            if this[-4:] == ".jpg" or this[-4:] == ".png":
-                parsed_image = image(this[:-4], this, 'UserImages/'); parsed_image.append({'fileend': this[-4:]})
-                i.append({this[:-4]: parsed_image})
+            this_str = this
+            nulllist = []; nullvalue = ''
+            for that in this_str:
+                if that == ' ': nulllist.append('_')
+                else: nulllist.append(that)
+            for that in nulllist:
+                nullvalue += that
+            if this_str[-4:] == ".jpg" or this_str[-4:] == ".png":
+                parsed_image = image(nullvalue[:-4], this_str, 'UserImages/'); parsed_image.append({'fileend': this_str[-4:]})
+                i.append({nullvalue[:-4]: parsed_image})
     def group(i, other_images_obj, group_keylist):
         for this in group_keylist:
             i.append({this: other_images_obj[this]})
@@ -168,17 +140,19 @@ class images_obj(gen_obj):
                         for that in i.UImouse_over:
                             if not that.layer == nullvalue:
                                 i.UImouse_over.remove(that)
+                    if this.title in i.UI_dict and not i.UI_dict[this.title]:
+                        del i.UI_dict[this.title]
                     if mouse.t2 and this in i.UImouse_over:
-                        if not this.title in i.UI_dict or not i.UI_dict[this.title]:
+                        if not this.title in i.UI_dict:
                             i.UI_dict.update({this.title: 1})
                         elif i.UI_dict[this.title]:
                             del i.UI_dict[this.title]
                             UI.created.update({this.title: 0})
-                    if this.title in i.UI_dict and i.UI_dict[this.title]:
-                        nullvalue = UI.image_window(screen, mouse, tkey, key, this, i)
-                        if nullvalue == 'exit':
-                            i.UI_dict.update({this.title: 0})
-def text_objects(text, font, color = ((255, 255, 255))):
+        if not UI == None:
+            for this in i.UI_dict:
+                if i.UI_dict[this]:
+                    exec('UI.image_window(screen, mouse, tkey, key, i.' + this + ', i)')
+def text_objects(text, font, color = (255, 255, 255)):
     textSurface = font.render(text, True, color)
     return textSurface, textSurface.get_rect()
 def message_display(screen, text, x, y, size, color):
@@ -196,8 +170,14 @@ def type_sort(value):
         else: type = 'int'
     except: type = 'str'
     return type
-def m():
-    downloadfile("https://raw.githubusercontent.com/Anonymous-crow/Disarray/master/image%5B1%5D.png", "alice.png")
+def parseimages(folder = ''):
+    if not os.path.isdir(folder + '/'): return None
+    import cv2; images = {}
+    for filename in os.listdir(folder):
+        img = cv2.imread(os.path.join(folder,filename))
+        if img is not None: images[str(filename.split('.')[0])].append(os.path.join(folder,filename))
+    if len(images) == 0: return None
+    else: return images
 def malleable_text(screen, x, y, image, image_attr_list, mouse, tkey, key, size = 25):
     for this in image_attr_list:
         nullvalue = message_display(screen, this + ': ' + str(image.attr_dict[this]), x, y + image_attr_list.index(this)*int(size*0.75), size, (255, 255, 255))
@@ -212,9 +192,17 @@ def malleable_text(screen, x, y, image, image_attr_list, mouse, tkey, key, size 
                 if tkey.attr_dict[that] and not tkey.char[that] == None:
                     if key.sh: tkey.held += tkey.shchar[that]
                     else: tkey.held += tkey.char[that]
-            if tkey.attr_dict['bk']:
+            if tkey.bk:
                 tkey.held = tkey.held[:-1]
-            if tkey.attr_dict['enter'] and len(tkey.held) > 0:
+                key.bkcount = 0
+            if key.bk: key.bkcount += 1
+            if hasattr(key, 'bkcount') and not key.bk: delattr(key, 'bkcount')
+            if hasattr(key, 'bkcount') and key.bkcount > 25 and (key.bkcount/5).is_integer():
+                tkey.held = tkey.held[:-1]
+            if tkey.enter and len(tkey.held) > 0:
+                if type_sort(image.attr_dict[this]) == 'float' and type_sort(tkey.held) == 'int':
+                    tkey.held += '.0'
+                delattr(image, 'malleable_text')
                 if type_sort(tkey.held) == type_sort(image.attr_dict[this]):
                     mouse.append({'UIheld': 0})
                     if this == 'title':
@@ -225,7 +213,7 @@ def malleable_text(screen, x, y, image, image_attr_list, mouse, tkey, key, size 
 class UI_obj(images_obj):
     def __init__(i, title):
         super().__init__(title)
-        i.x_pos = {}; i.y_pos = {}; i.x_len = {}; i.y_len = {}; i.created = {}; i.selected = []; i.right_select = {}; i.left_select = {}; i.bottom_select = {};
+        i.x_pos = {}; i.y_pos = {}; i.x_len = {}; i.y_len = {}; i.created = {}; i.selected = []; i.right_select = {}; i.left_select = {}; i.bottom_select = {}
     def retrieve(i, path = 'Structure/UI/'):
         from Structure.Jumble_Imports import image; import os
         for this in os.listdir(path):
@@ -239,7 +227,7 @@ class UI_obj(images_obj):
             if image.center[0] > 960:
                 i.x_pos.update({image.title: image.x_pos - 600}); i.y_pos.update({image.title: image.y_pos}); i.x_len.update({image.title: 500}); i.y_len.update({image.title: 500})
             if image.center[0] <= 960:
-                i.x_pos.update({image.title: image.right + 6900}); i.y_pos.update({image.title: image.y_pos}); i.x_len.update({image.title: 500}); i.y_len.update({image.title: 500})
+                i.x_pos.update({image.title: image.right + 100}); i.y_pos.update({image.title: image.y_pos}); i.x_len.update({image.title: 500}); i.y_len.update({image.title: 500})
             i.created.update({image.title: 1})
             if i.y_pos[image.title] < 0: i.y_pos.update({image.title: 0})
         windowbox = pg.draw.rect(screen, ((20, 20, 20)), (i.x_pos[image.title], i.y_pos[image.title] + 12, i.x_len[image.title], i.y_len[image.title] - 12))
@@ -248,30 +236,32 @@ class UI_obj(images_obj):
         i.X.draw(screen)
         if i.X.rect.collidepoint(mouse.x, mouse.y) and mouse.t1:
             i.created.update({image.title: 0})
-            return 'exit'
-        if not image.title in i.right_select:
-            i.right_select.update({image.title: 0})
-        if mouse.x > i.x_pos[image.title] + i.x_len[image.title] - 10 and mouse.x < i.x_pos[image.title] + i.x_len[image.title] + 10 and mouse.y > i.y_pos[image.title] and mouse.y < i.y_pos[image.title] + i.y_len[image.title] and mouse.t1: i.right_select[image.title] = 1
-        if i.right_select[image.title]: i.x_len[image.title] = mouse.x - i.x_pos[image.title]; mouse.append({'UIheld': 1})
-        if i.x_len[image.title] < 100: i.x_len[image.title] = 100
-        if i.right_select[image.title] and not mouse.m1: i.right_select[image.title] = 0; mouse.append({'UIheld': 0})
-        if not image.title in i.left_select:
-            i.left_select.update({image.title: 0})
-        if mouse.x > i.x_pos[image.title] - 10 and mouse.x < i.x_pos[image.title] + 10 and mouse.y > i.y_pos[image.title] and mouse.y < i.y_pos[image.title] + i.y_len[image.title] and mouse.t1: i.left_select[image.title] = 1
-        if i.left_select[image.title]: nullvalue = i.x_pos[image.title]; i.x_pos[image.title] = mouse.x; i.x_len[image.title] -= i.x_pos[image.title] - nullvalue; mouse.append({'UIheld': 1})
-        if i.x_len[image.title] < 100: i.x_len[image.title] = 100
-        if i.left_select[image.title] and not mouse.m1: i.left_select[image.title] = 0; mouse.append({'UIheld': 0})
-        if not image.title in i.bottom_select:
-            i.bottom_select.update({image.title: 0})
-        if mouse.y > i.y_pos[image.title] + i.y_len[image.title] - 10 and mouse.y < i.y_pos[image.title] + i.y_len[image.title] + 10 and mouse.x > i.x_pos[image.title] and mouse.x < i.x_pos[image.title] + i.x_len[image.title] and mouse.t1: i.bottom_select[image.title] = 1
-        if i.bottom_select[image.title]: i.y_len[image.title] = mouse.y - i.y_pos[image.title]; mouse.append({'UIheld': 1})
-        if i.y_len[image.title] < 100: i.y_len[image.title] = 100
-        if i.bottom_select[image.title] and not mouse.m1: i.bottom_select[image.title] = 0; mouse.append({'UIheld': 0})
-        if windowbar.collidepoint(mouse.x, mouse.y) and mouse.t1: i.append({'x_diff': mouse.x - i.x_pos[image.title], 'y_diff': mouse.y - i.y_pos[image.title]}); i.selected.append(image.title); mouse.append({'UIheld': 1})
-        if image.title in i.selected and not mouse.m1: i.selected.remove(image.title); i.delete(['x_diff', 'y_diff']); mouse.append({'UIheld': 0})
-        if image.title in i.selected: i.x_pos.update({image.title: mouse.x - i.x_diff}); i.y_pos.update({image.title: mouse.y - i.y_diff})
-        title_v = malleable_text(screen, i.x_pos[image.title], i.y_pos[image.title] + 12, image, ['title', 'x_pos', 'y_pos', 'layer'], mouse, tkey, key)
-        if not title_v == None:
-            exec('os.rename("UserImages/" + title_v[0] + images.' + title_v[0] + '.fileend, "UserImages/" + title_v[1] + images.' + title_v[0] + '.fileend)')
-            exec('images.append({title_v[1]: images.' + title_v[0] + '})')
-            images.delete([title_v[0]])
+            images.UI_dict.update({image.title: 0})
+            mouse.append({'UIheld': 0})
+        if i.created[image.title]:
+            if not image.title in i.right_select:
+                i.right_select.update({image.title: 0})
+            if mouse.x > i.x_pos[image.title] + i.x_len[image.title] - 10 and mouse.x < i.x_pos[image.title] + i.x_len[image.title] + 10 and mouse.y > i.y_pos[image.title] and mouse.y < i.y_pos[image.title] + i.y_len[image.title] and mouse.t1: i.right_select[image.title] = 1
+            if i.right_select[image.title]: i.x_len[image.title] = mouse.x - i.x_pos[image.title]; mouse.append({'UIheld': 1})
+            if i.x_len[image.title] < 100: i.x_len[image.title] = 100
+            if i.right_select[image.title] and not mouse.m1: i.right_select[image.title] = 0; mouse.append({'UIheld': 0})
+            if not image.title in i.left_select:
+                i.left_select.update({image.title: 0})
+            if mouse.x > i.x_pos[image.title] - 10 and mouse.x < i.x_pos[image.title] + 10 and mouse.y > i.y_pos[image.title] and mouse.y < i.y_pos[image.title] + i.y_len[image.title] and mouse.t1: i.left_select[image.title] = 1
+            if i.left_select[image.title]: nullvalue = i.x_pos[image.title]; i.x_pos[image.title] = mouse.x; i.x_len[image.title] -= i.x_pos[image.title] - nullvalue; mouse.append({'UIheld': 1})
+            if i.x_len[image.title] < 100: i.x_len[image.title] = 100
+            if i.left_select[image.title] and not mouse.m1: i.left_select[image.title] = 0; mouse.append({'UIheld': 0})
+            if not image.title in i.bottom_select:
+                i.bottom_select.update({image.title: 0})
+            if mouse.y > i.y_pos[image.title] + i.y_len[image.title] - 10 and mouse.y < i.y_pos[image.title] + i.y_len[image.title] + 10 and mouse.x > i.x_pos[image.title] and mouse.x < i.x_pos[image.title] + i.x_len[image.title] and mouse.t1: i.bottom_select[image.title] = 1
+            if i.bottom_select[image.title]: i.y_len[image.title] = mouse.y - i.y_pos[image.title]; mouse.append({'UIheld': 1})
+            if i.y_len[image.title] < 100: i.y_len[image.title] = 100
+            if i.bottom_select[image.title] and not mouse.m1: i.bottom_select[image.title] = 0; mouse.append({'UIheld': 0})
+            if windowbar.collidepoint(mouse.x, mouse.y) and mouse.t1: i.append({'x_diff': mouse.x - i.x_pos[image.title], 'y_diff': mouse.y - i.y_pos[image.title]}); i.selected.append(image.title); mouse.append({'UIheld': 1})
+            if image.title in i.selected and not mouse.m1: i.selected.remove(image.title); i.delete(['x_diff', 'y_diff']); mouse.append({'UIheld': 0})
+            if image.title in i.selected: i.x_pos.update({image.title: mouse.x - i.x_diff}); i.y_pos.update({image.title: mouse.y - i.y_diff})
+            title_v = malleable_text(screen, i.x_pos[image.title], i.y_pos[image.title] + 12, image, ['title', 'x_pos', 'y_pos', 'layer'], mouse, tkey, key)
+            if not title_v == None:
+                exec('os.rename("UserImages/" + title_v[0] + images.' + title_v[0] + '.fileend, "UserImages/" + title_v[1] + images.' + title_v[0] + '.fileend)')
+                exec('images.append({title_v[1]: images.' + title_v[0] + '})')
+                images.delete([title_v[0]])
